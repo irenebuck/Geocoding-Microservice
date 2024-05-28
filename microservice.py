@@ -8,25 +8,38 @@ context = zmq.Context()
 socket = context.socket(zmq.REP)
 socket.bind("tcp://*:8080")
 
-while True:
-    # assigns string received from app.py file to message variable
-    message = socket.recv_string()
 
-    # replaces spaces with '+'s so we can build a properly formatted url
+def make_url(a_message):
+    """
+    Parameter: string received through a socket
+    String is formatted, replacing spaces with '+'s, and URL is built with it for API call
+    Returns: URL for Google Geocoding API call
+    """
     prepped_address = '+'.join(message.split())
-
-    # creates url for the API to read
     url = f"{base_url}{prepped_address}&key={api_key}"
+    return url
 
-    # sends request, captures JSON response from Geocoding API
-    response = requests.get(url)
-    data = response.json()
 
-    # Reads the JSON response and sends string response to app.py
-    if data['status'] == 'OK':
-        location = data['results'][0]['geometry']['location']
+def send_API_response(api_json):
+    """
+    Parameter: JSON file sent from API
+    Sends a string with coordinates or error response to app.py
+    """
+    if api_json['status'] == 'OK':
+        location = api_json['results'][0]['geometry']['location']
         coordinates = f"Latitude: {location['lat']}, Longitude: {location['lng']}"
         socket.send_string(coordinates)
     else:
         socket.send_string("This address is incomplete. Please re-enter the address. "
                            "Acceptable entries include just the zip code, a city and state, or a complete address.")
+
+
+while True:
+    # assigns string received from app.py file to message variable
+    message = socket.recv_string()
+    # format a URL for the API call
+    url = make_url(message)
+    # sends request, captures JSON response from Geocoding API, uses JSON to create response and sends to app.py
+    response = requests.get(url)
+    data = response.json()
+    send_API_response(data)
