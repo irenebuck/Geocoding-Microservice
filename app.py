@@ -7,22 +7,11 @@ def get_coordinates():
     On button click, takes location, makes ZeroMQ socket connection using port 8080, sends address string through socket,
     receives coordinate string, and prints the coordinates to the GUI.
     """
-    # holds the user's location input in address variable
     address = address_entry.get()
-
-    # Initializes ZeroMQ context
     context = zmq.Context()
-
-    # Creates request socket for sending and receiving
     socket = context.socket(zmq.REQ)
-
-    # Connects socket to endpoint
     socket.connect("tcp://localhost:8080")
-
-    # Sends the address to the endpoint
     socket.send_string(address)
-
-    # Receives response from the endpoint - the coordinates in string format
     response = socket.recv_string()
 
     # Updates the text in the result Label widget with the response value(coordinates)

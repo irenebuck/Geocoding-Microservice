@@ -5,9 +5,7 @@ base_url = "https://maps.googleapis.com/maps/api/geocode/json?address="
 api_key = 'AIzaSyDPHngadFjKeSDzYoIV2Y8ToXSWhx6ISmE'
 
 context = zmq.Context()
-# Creates a reply socket
 socket = context.socket(zmq.REP)
-# listens on port 8080
 socket.bind("tcp://*:8080")
 
 while True:
@@ -24,8 +22,7 @@ while True:
     response = requests.get(url)
     data = response.json()
 
-    # Reads the JSON response to confirm the OK status, and if status OK sends the coordinates back through the socket
-    # If status is not 'OK', sends string with directions for the user to re-enter location.
+    # Reads the JSON response and sends string response to app.py
     if data['status'] == 'OK':
         location = data['results'][0]['geometry']['location']
         coordinates = f"Latitude: {location['lat']}, Longitude: {location['lng']}"
