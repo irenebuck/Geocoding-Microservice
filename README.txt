@@ -2,6 +2,7 @@
 Geocode Microservice
 *****
 This project builds a basic GUI app using tkinter and is coded in Python.
+
 The user enters an address and that address is communicated through a ZeroMQ REQ socket to a microservice.
 The microservice listens for a message on port 8080. When one is received, it prepares a properly formatted url
 to call the Google Geocoding API. The API converts the address to the location's latitude and longitude and sends
@@ -13,8 +14,7 @@ to resubmit the location is sent in a string. The receiving app.py then shares t
 Guides in the creation of this program:
 *****
 Google Geocoding API
-Directions on using the Google Geocoding API are found at
-https://developers.google.com/maps/documentation/geocoding/requests-geocoding
+Directions on using the Google Geocoding API are found at https://developers.google.com/maps/documentation/geocoding/requests-geocoding
 API Request format: https://maps.googleapis.com/maps/api/geocode/outputFormat?parameters
 Example: https://maps.googleapis.com/maps/api/geocode/json?address=Mountain+View,+CA&amp;key=YOUR_API_KEY
 
@@ -156,3 +156,6 @@ How to use this program:
 - The app.py listening on the 8080 port will receive the response and display it for the user to read on their screen.
 
 
+Implementing This Microservice Into Your Project
+*****
+Import zmq to your app.py equivalent of your application and use the equivalent of the get_coordinates() function to access the microservice.
